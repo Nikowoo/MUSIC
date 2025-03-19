@@ -242,5 +242,34 @@ filter:drop-shadow(2px 2px 0.25rem rgba(69, 230, 255,0.8));
 
  
     </script>
- 
+ <body>
+  <audio id="audioPlayer" controls></audio>
+  <button onclick="playNext()">Play Next</button>
+
+  <script>
+    let urls = [];
+    let currentTrack = 0;
+    const player = document.getElementById('audioPlayer');
+
+    async function loadPlaylist(url) {
+      const response = await fetch(url);
+      const playlist = await response.text();
+      urls = playlist
+        .split('\n')
+        .filter(line => line && !line.startsWith('#')); // Ignore comments and empty lines
+    }
+
+    function playNext() {
+      if (currentTrack >= urls.length) {
+        alert("End of playlist");
+        return;
+      }
+      player.src = urls[currentTrack];
+      player.play();
+      currentTrack++;
+    }
+
+    // Load the M3U file (replace with your URL)
+    loadPlaylist('https://files.catbox.moe/5a3m1q.m3u');
+  </script>
 </body>
