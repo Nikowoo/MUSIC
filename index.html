@@ -1,0 +1,246 @@
+<style>
+ 
+    body {
+ 
+        margin: 0;
+ 
+        padding: 0;
+ 
+        background-size: cover;
+ 
+        background-position: center;
+ 
+        height: 100vh;
+ 
+    }
+ 
+
+ 
+    .icons {
+ 
+        position: absolute;
+ 
+        background-image: url("https://files.catbox.moe/707bnr.png");
+ 
+        width: 457px;
+ 
+        height: 67px;
+ 
+        bottom: 14px;
+ 
+        right: 14px;
+ 
+    }
+ 
+
+ 
+    .vignette {
+ 
+        position: fixed;
+ 
+        top: 0;
+ 
+        left: 0;
+ 
+        width: 100%;
+ 
+        height: 100%;
+ 
+        box-shadow: 0 0 200px rgba(0, 0, 0, 0.9) inset;
+ 
+    }
+ 
+
+ 
+    @keyframes ScanlineAnimationLeft {
+ 
+        0% {
+ 
+            transform: translateX(0px) translateY(0px);
+ 
+        }
+ 
+        100% {
+ 
+            transform: translateX(-32px) translateY(-32px);
+ 
+        }
+ 
+    }
+ 
+
+ 
+    body::before {
+ 
+        content: "";
+ 
+        display: block;
+ 
+        position: fixed;
+ 
+        left: 0;
+ 
+        top: 0;
+ 
+        width: calc(100% + 32px);
+ 
+        height: calc(100% + 32px);
+ 
+        background-image: url(https://files.catbox.moe/xakyzk.png);
+ 
+        background-repeat: repeat;
+ 
+        z-index: 10000000;
+ 
+        animation: ScanlineAnimationLeft 2s linear infinite;
+ 
+        pointer-events: none;
+ 
+        opacity: 1;
+ 
+    }
+ 
+
+ 
+	.tooltip {
+ 
+  background-color:rgba(255,255,255,0);
+ 
+  color: blue;
+ 
+  cursor: pointer;
+ 
+  padding: 2px 4px;
+ 
+  width: 140px;
+ 
+  border:none;
+ 
+  text-align: center;
+ 
+  font-size: 24px;
+ 
+  border-radius: 4px;
+ 
+  font-family:"MS PGothic";
+ 
+  position: relative;
+ 
+  display:block;
+ 
+filter:drop-shadow(2px 2px 0.25rem rgba(69, 230, 255,0.8));
+ 
+  box-shadow: 2px 2px 2px rgba(0, 100, 255, 0.25);
+ 
+}
+ 
+
+
+ 
+
+.topleft {
+ 
+
+  position: absolute;
+ 
+
+  background-size: 100% 100%;
+ 
+
+  width: 564px;
+ 
+
+  height: 84px;
+ 
+
+  top: 14px;
+ 
+
+  left: 14px;
+ 
+
+}
+ 
+</style>
+ 
+
+ 
+<body>
+ 
+
+	<div class="topleft"><script type="text/javascript" src="https://counter.websiteout.com/js/5/6/0/0"></script></div>
+ 
+    <div class="vignette"></div>
+ 
+    <div class="icons"></div>
+ 
+ 
+    <script>
+ 
+        const images = [
+ 
+            "https://files.catbox.moe/ymlbd8.png",
+ 
+            "https://files.catbox.moe/acabpg.png",
+ 
+            "https://files.catbox.moe/ajfs4j.png",
+ 
+            "https://files.catbox.moe/nk5qhq.png"
+ 
+        ];
+ 
+        const randomImage = images[Math.floor(Math.random() * images.length)];
+ 
+        document.body.style.backgroundImage = `url('${randomImage}')`;
+ 
+
+ 
+        const niko = document.getElementById('niko');
+ 
+        let offsetX, offsetY, isDragging = false;
+ 
+
+ 
+        niko.addEventListener('mousedown', (e) => {
+ 
+            isDragging = true;
+ 
+            offsetX = e.clientX - niko.getBoundingClientRect().left;
+ 
+            offsetY = e.clientY - niko.getBoundingClientRect().top;
+ 
+            niko.style.cursor = 'grabbing';
+ 
+        });
+ 
+
+ 
+        document.addEventListener('mousemove', (e) => {
+ 
+            if (!isDragging) return;
+ 
+            const x = e.clientX - offsetX;
+ 
+            const y = e.clientY - offsetY;
+ 
+            niko.style.left = `${x}px`;
+ 
+            niko.style.top = `${y}px`;
+ 
+        });
+ 
+
+ 
+        document.addEventListener('mouseup', () => {
+ 
+            isDragging = false;
+ 
+            niko.style.cursor = 'grab';
+ 
+        });
+ 
+
+ 
+    </script>
+ 
+</body>
