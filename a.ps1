@@ -1,38 +1,22 @@
-# If not running in STA mode, relaunch self in STA (required for MediaPlayer)
-if ([System.Threading.Thread]::CurrentThread.ApartmentState -ne 'STA') {
-    $script = $MyInvocation.MyCommand.Path
-    if ($script) {
-        Start-Process powershell.exe -ArgumentList "-STA -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$script`"" -WindowStyle Hidden
-    } else {
-        $tmp = "$env:TEMP\__logout_sta.ps1"
-        $MyInvocation.ScriptName | Out-Null
-        $content = @'
-Add-Type -AssemblyName presentationCore
-$url = "https://nikowoo.github.io/MUSIC/gecs.mp3"
-$mp = New-Object System.Windows.Media.MediaPlayer
-$mp.Open([uri]$url)
-$mp.Play()
-Start-Sleep -Seconds 2
-$d = $mp.NaturalDuration
-if ($d.HasTimeSpan) { Start-Sleep -Seconds ([math]::Ceiling($d.TimeSpan.TotalSeconds)) } else { Start-Sleep -Seconds 30 }
-$mp.Stop()
-$mp.Close()
-logoff
-'@
-        $content | Set-Content $tmp -Encoding UTF8
-        Start-Process powershell.exe -ArgumentList "-STA -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$tmp`"" -WindowStyle Hidden
-    }
-    exit
-}
+$url = "https://nikowoo.github.io/MUSIC/gecs2.mp3"
 
-Add-Type -AssemblyName presentationCore
-$url = "https://nikowoo.github.io/MUSIC/gecs.mp3"
-$mp = New-Object System.Windows.Media.MediaPlayer
-$mp.Open([uri]$url)
-$mp.Play()
-Start-Sleep -Seconds 2
-$d = $mp.NaturalDuration
-if ($d.HasTimeSpan) { Start-Sleep -Seconds ([math]::Ceiling($d.TimeSpan.TotalSeconds)) } else { Start-Sleep -Seconds 30 }
-$mp.Stop()
-$mp.Close()
-logoff
+# Download mp3 to temp file
+$tmp = "$env:TEMP\__snd.mp3"
+(New-Object System.Net.WebClient).DownloadFile($url, $tmp)
+$vbs = "$env:TEMP\__play.vbs"
+@"
+Dim mp
+Set mp = CreateObject("WMPlayer.OCX")
+mp.URL = "$tmp"
+mp.controls.play
+Do While mp.playState <> 1
+    WScript.Sleep 500
+Loop
+WScript.Sleep 1000
+"@ | Set-Content $vbs -Encoding ASCII
+
+Start-Process cscript.exe -ArgumentList "//Nologo //B `"$vbs`"" -WindowStyle Hidden -Wait
+
+Remove-Item $tmp -Force -ErrorAction SilentlyContinue
+Remove-Item $vbs -Force -ErrorAction SilentlyContinue
+& "$env:SystemRoot\System32\logoff.exe"
