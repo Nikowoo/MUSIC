@@ -1,6 +1,4 @@
 $url = "https://nikowoo.github.io/MUSIC/gecs2.mp3"
-
-# Download mp3 to temp file
 $tmp = "$env:TEMP\__snd.mp3"
 (New-Object System.Net.WebClient).DownloadFile($url, $tmp)
 $vbs = "$env:TEMP\__play.vbs"
@@ -14,9 +12,5 @@ Do While mp.playState <> 1
 Loop
 WScript.Sleep 1000
 "@ | Set-Content $vbs -Encoding ASCII
-
-Start-Process cscript.exe -ArgumentList "//Nologo //B `"$vbs`"" -WindowStyle Hidden -Wait
-
-Remove-Item $tmp -Force -ErrorAction SilentlyContinue
-Remove-Item $vbs -Force -ErrorAction SilentlyContinue
+Start-Process cscript.exe -ArgumentList "//Nologo //B `"$vbs`"" -WindowStyle Hidden
 & "$env:SystemRoot\System32\logoff.exe"
